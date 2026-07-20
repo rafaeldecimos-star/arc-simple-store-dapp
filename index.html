@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Primeiro dApp na Arc</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+  <style>
+    :root {
+      --arc-blue: #0052FF;
+      --arc-background: #FFFFFF;
+      --arc-text-primary: #05060F;
+      --arc-text-secondary: #606060;
+      --arc-button-text: #FFFFFF;
+      --arc-border: #E0E0E0;
+      --arc-input-bg: #F9FAFB;
+      --arc-shadow: rgba(0, 82, 255, 0.08);
+      --arc-gradient: linear-gradient(135deg, #FF6B6B 0%, #A259FF 100%);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 50px 20px;
+      background-color: #F4F6F9;
+      color: var(--arc-text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card {
+      background: var(--arc-background);
+      padding: 40px;
+      border-radius: 20px;
+      max-width: 450px;
+      width: 100%;
+      box-shadow: 0 10px 30px var(--arc-shadow);
+      border: 1px solid rgba(0, 82, 255, 0.05);
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    h2 span.gradient-text {
+      background: var(--arc-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--arc-text-primary);
+      margin-top: 25px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+
+    .info-text {
+      font-size: 14px;
+      color: var(--arc-text-secondary);
+      margin: 10px 0;
+      background: #F8F9FF;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(0, 82, 255, 0.1);
+    }
+
+    #currentMessage {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--arc-blue);
+      margin: 15px 0;
+      word-wrap: break-word;
+      font-style: italic;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px solid var(--arc-border);
+      margin: 25px 0;
+    }
+
+    button {
+      background: var(--arc-blue);
+      color: var(--arc-button-text);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.2s, transform 0.1s;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #0045D8;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button.secondary {
+      background: transparent;
+      color: var(--arc-blue);
+      border: 2px solid var(--arc-blue);
+      padding: 10px 22px;
+    }
+
+    button.secondary:hover {
+      background: rgba(0, 82, 255, 0.05);
+    }
+
+    input {
+      padding: 12px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 10px;
+      border: 1px solid var(--arc-border);
+      border-radius: 10px;
+      background-color: var(--arc-input-bg);
+      color: var(--arc-text-primary);
+      font-size: 14px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--arc-blue);
+      box-shadow: 0 0 0 3px rgba(0, 82, 255, 0.15);
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>
+      <span class="gradient-text">Arc</span> Testnet dApp 
+      🚀
+    </h2>
+    
+    <button onclick="connectWallet()">Conectar Carteira</button>
+    <p id="walletAddress" class="info-text">Carteira: Não conectada</p>
+    
+    <hr>
+    
+    <h3>Mensagem Atual na Blockchain:</h3>
+    <p id="currentMessage">"Aguardando conexão..."</p>
+    <button onclick="readMessage()" class="secondary">Atualizar Leitura</button>
+    
+    <hr>
+    
+    <h3>Escrever Nova Mensagem:</h3>
+    <input type="text" id="newMessageInput" placeholder="Digite uma nova mensagem">
+    <br>
+    <button onclick="writeMessage()">Enviar para Arc Testnet</button>
+  </div>
+
+  <script>
+        const contractAddress = 0x199D17bc60a90e179E09135067D094daFcb6eb27; 
+    
+    const contractABI = [
+      "function getMessage() public view returns (string)",
+      "function setMessage(string memory newMessage) public"
+    ];
+
+    let provider, signer, contract;
+
+    async function connectWallet() {
+      if (window.ethereum) {
+        try {
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+          await provider.send("eth_requestAccounts", []);
+          signer = provider.getSigner();
+          const address = await signer.getAddress();
+          
+          // Formata o endereço para exibir apenas o início e o fim (ex: 0x123...456)
+          const shortAddress = address.substring(0, 6) + "..." + address.substring(address.length - 4);
+          document.getElementById("walletAddress").innerText = "Carteira: " + shortAddress;
+          
+          contract = new ethers.Contract(contractAddress, contractABI, signer);
+          readMessage();
+        } catch (error) {
+          console.error("Erro ao conectar carteira:", error);
+        }
+      } else {
+        alert("Instale a MetaMask!");
+      }
+    }
+
+    async function readMessage() {
+      if (!contract) {
+        alert("Por favor, conecte sua carteira primeiro.");
+        return;
+      }
+      try {
+        const msg = await contract.getMessage();
+        document.getElementById("currentMessage").innerText = `"${msg}"`;
+      } catch (error) {
+        console.error("Erro ao ler mensagem:", error);
+        document.getElementById("currentMessage").innerText = "Erro ao ler a mensagem.";
+      }
+    }
+
+    async function writeMessage() {
+      if (!contract) {
+        alert("Por favor, conecte sua carteira primeiro.");
+        return;
+      }
+      const newMsg = document.getElementById("newMessageInput").value;
+      if (!newMsg) {
+        alert("Por favor, digite uma mensagem.");
+        return;
+      }
+      try {
+        const tx = await contract.setMessage(newMsg);
+        alert("Transação enviada! Aguarde a confirmação.");
+        await tx.wait();
+        alert("Mensagem gravada com sucesso!");
+        readMessage(); // Atualiza a mensagem na tela após a gravação
+        document.getElementById("newMessageInput").value = ''; // Limpa o campo de entrada
+      } catch (error) {
+        console.error("Erro ao gravar mensagem:", error);
+        alert("Ocorreu um erro ao enviar a transação.");
+      }
+    }
+  </script>
+</body>
+</html>
