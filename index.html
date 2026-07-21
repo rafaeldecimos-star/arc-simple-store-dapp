@@ -3,240 +3,219 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meu Primeiro dApp na Arc</title>
+  <title>Arc Faucet & Token Dashboard</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
   <style>
     :root {
-      --arc-blue: #0052FF;
-      --arc-background: #FFFFFF;
-      --arc-text-primary: #05060F;
-      --arc-text-secondary: #606060;
-      --arc-button-text: #FFFFFF;
-      --arc-border: #E0E0E0;
-      --arc-input-bg: #F9FAFB;
-      --arc-shadow: rgba(0, 82, 255, 0.08);
-      --arc-gradient: linear-gradient(135deg, #FF6B6B 0%, #A259FF 100%);
+      --primary: #0052FF;
+      --bg: #0F172A;
+      --card-bg: #1E293B;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border: #334155;
+      --success: #10B981;
+      --danger: #EF4444;
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 50px 20px;
-      background-color: #F4F6F9;
-      color: var(--arc-text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      margin: 0;
+      padding: 20px;
     }
 
     .card {
-      background: var(--arc-background);
-      padding: 40px;
-      border-radius: 20px;
-      max-width: 450px;
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 16px;
+      max-width: 480px;
       width: 100%;
-      box-shadow: 0 10px 30px var(--arc-shadow);
-      border: 1px solid rgba(0, 82, 255, 0.05);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      border: 1px solid var(--border);
     }
 
-    h2 {
+    h1 {
+      font-size: 22px;
+      margin-top: 0;
+      text-align: center;
+      color: #FFF;
+    }
+
+    .status-badge {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 20px;
+      word-break: break-all;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .stat-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
       font-size: 24px;
       font-weight: 700;
-      margin-top: 0;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    h2 span.gradient-text {
-      background: var(--arc-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    h3 {
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--arc-text-primary);
-      margin-top: 25px;
-      margin-bottom: 10px;
-      text-align: left;
-    }
-
-    .info-text {
-      font-size: 14px;
-      color: var(--arc-text-secondary);
-      margin: 10px 0;
-      background: #F8F9FF;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid rgba(0, 82, 255, 0.1);
-    }
-
-    #currentMessage {
-      font-size: 18px;
-      font-weight: 500;
-      color: var(--arc-blue);
-      margin: 15px 0;
-      word-wrap: break-word;
-      font-style: italic;
-    }
-
-    hr {
-      border: 0;
-      border-top: 1px solid var(--arc-border);
-      margin: 25px 0;
+      color: var(--success);
+      margin-top: 5px;
     }
 
     button {
-      background: var(--arc-blue);
-      color: var(--arc-button-text);
+      background: var(--primary);
+      color: #FFF;
       border: none;
-      padding: 12px 24px;
+      padding: 14px;
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 10px;
-      transition: background-color 0.2s, transform 0.1s;
       width: 100%;
+      transition: opacity 0.2s;
     }
 
     button:hover {
-      background-color: #0045D8;
+      opacity: 0.9;
     }
 
-    button:active {
-      transform: translateY(1px);
+    button:disabled {
+      background: var(--border);
+      cursor: not-allowed;
     }
 
-    button.secondary {
-      background: transparent;
-      color: var(--arc-blue);
-      border: 2px solid var(--arc-blue);
-      padding: 10px 22px;
+    #logMessage {
+      margin-top: 15px;
+      font-size: 13px;
+      text-align: center;
+      min-height: 20px;
     }
-
-    button.secondary:hover {
-      background: rgba(0, 82, 255, 0.05);
-    }
-
-    input {
-      padding: 12px;
-      width: 100%;
-      box-sizing: border-box;
-      margin-top: 10px;
-      border: 1px solid var(--arc-border);
-      border-radius: 10px;
-      background-color: var(--arc-input-bg);
-      color: var(--arc-text-primary);
-      font-size: 14px;
-    }
-
-    input:focus {
-      outline: none;
-      border-color: var(--arc-blue);
-      box-shadow: 0 0 0 3px rgba(0, 82, 255, 0.15);
-    }
-
   </style>
 </head>
 <body>
 
   <div class="card">
-    <h2>
-      <span class="gradient-text">Arc</span> Testnet dApp 
-      🚀
-    </h2>
-    
-    <button onclick="connectWallet()">Conectar Carteira</button>
-    <p id="walletAddress" class="info-text">Carteira: Não conectada</p>
-    
-    <hr>
-    
-    <h3>Mensagem Atual na Blockchain:</h3>
-    <p id="currentMessage">"Aguardando conexão..."</p>
-    <button onclick="readMessage()" class="secondary">Atualizar Leitura</button>
-    
-    <hr>
-    
-    <h3>Escrever Nova Mensagem:</h3>
-    <input type="text" id="newMessageInput" placeholder="Digite uma nova mensagem">
-    <br>
-    <button onclick="writeMessage()">Enviar para Arc Testnet</button>
+    <h1>🚰 Arc Faucet & Dashboard</h1>
+    <div id="walletStatus" class="status-badge">Carteira: Não Conectada</div>
+
+    <button id="connectBtn" onclick="connectWallet()">Conectar Carteira</button>
+
+    <div class="dashboard-grid">
+      <div class="stat-box">
+        <div class="stat-label">Seu Saldo ABT</div>
+        <div class="stat-value" id="userBalance">0.0 ABT</div>
+      </div>
+    </div>
+
+    <button id="faucetBtn" onclick="requestTokens()" disabled>Resgatar 100 ABT</button>
+    <div id="logMessage"></div>
   </div>
 
   <script>
-        const contractAddress = 0x199D17bc60a90e179E09135067D094daFcb6eb27; 
-    
+    // Endereço do contrato implantado na Arc Testnet
+    const contractAddress = "0xe21Da15088C0cEc0Ea7b3d011d3Fce511dEDD0C6";
+
     const contractABI = [
-      "function getMessage() public view returns (string)",
-      "function setMessage(string memory newMessage) public"
+      "function balanceOf(address account) public view returns (uint256)",
+      "function requestTokens() external",
+      "function getTimeUntilNextClaim(address user) external view returns (uint256)"
     ];
 
-    let provider, signer, contract;
+    let provider, signer, contract, userAddress;
 
     async function connectWallet() {
-      if (window.ethereum) {
-        try {
-          provider = new ethers.providers.Web3Provider(window.ethereum);
-          await provider.send("eth_requestAccounts", []);
-          signer = provider.getSigner();
-          const address = await signer.getAddress();
-          
-          // Formata o endereço para exibir apenas o início e o fim (ex: 0x123...456)
-          const shortAddress = address.substring(0, 6) + "..." + address.substring(address.length - 4);
-          document.getElementById("walletAddress").innerText = "Carteira: " + shortAddress;
-          
-          contract = new ethers.Contract(contractAddress, contractABI, signer);
-          readMessage();
-        } catch (error) {
-          console.error("Erro ao conectar carteira:", error);
+      if (!window.ethereum) {
+        alert("Por favor, instale uma carteira Web3 (MetaMask ou Rabby)!");
+        return;
+      }
+
+      try {
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        signer = provider.getSigner();
+        userAddress = await signer.getAddress();
+
+        document.getElementById("walletStatus").innerText = `Conectado: ${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
+        document.getElementById("connectBtn").style.display = "none";
+        document.getElementById("faucetBtn").disabled = false;
+
+        contract = new ethers.Contract(contractAddress, contractABI, signer);
+        
+        await updateDashboard();
+      } catch (err) {
+        console.error("Erro ao conectar:", err);
+        showLog("Erro ao conectar carteira.", "red");
+      }
+    }
+
+    async function updateDashboard() {
+      if (!contract || !userAddress) return;
+
+      try {
+        const rawBalance = await contract.balanceOf(userAddress);
+        const formattedBalance = ethers.utils.formatUnits(rawBalance, 18);
+        document.getElementById("userBalance").innerText = `${formattedBalance} ABT`;
+
+        const timeRemaining = await contract.getTimeUntilNextClaim(userAddress);
+        const faucetBtn = document.getElementById("faucetBtn");
+
+        if (timeRemaining > 0) {
+          const hours = Math.floor(timeRemaining / 3600);
+          const minutes = Math.floor((timeRemaining % 3600) / 60);
+          faucetBtn.disabled = true;
+          faucetBtn.innerText = `Aguarde ${hours}h ${minutes}m`;
+        } else {
+          faucetBtn.disabled = false;
+          faucetBtn.innerText = "Resgatar 100 ABT";
         }
-      } else {
-        alert("Instale a MetaMask!");
+      } catch (err) {
+        console.error("Erro ao atualizar o painel:", err);
       }
     }
 
-    async function readMessage() {
-      if (!contract) {
-        alert("Por favor, conecte sua carteira primeiro.");
-        return;
-      }
-      try {
-        const msg = await contract.getMessage();
-        document.getElementById("currentMessage").innerText = `"${msg}"`;
-      } catch (error) {
-        console.error("Erro ao ler mensagem:", error);
-        document.getElementById("currentMessage").innerText = "Erro ao ler a mensagem.";
-      }
-    }
+    async function requestTokens() {
+      if (!contract) return;
 
-    async function writeMessage() {
-      if (!contract) {
-        alert("Por favor, conecte sua carteira primeiro.");
-        return;
-      }
-      const newMsg = document.getElementById("newMessageInput").value;
-      if (!newMsg) {
-        alert("Por favor, digite uma mensagem.");
-        return;
-      }
       try {
-        const tx = await contract.setMessage(newMsg);
-        alert("Transação enviada! Aguarde a confirmação.");
+        showLog("Enviando transação...", "#94A3B8");
+        const tx = await contract.requestTokens();
+        showLog("Aguardando confirmação na rede...", "#94A3B8");
+        
         await tx.wait();
-        alert("Mensagem gravada com sucesso!");
-        readMessage(); // Atualiza a mensagem na tela após a gravação
-        document.getElementById("newMessageInput").value = ''; // Limpa o campo de entrada
-      } catch (error) {
-        console.error("Erro ao gravar mensagem:", error);
-        alert("Ocorreu um erro ao enviar a transação.");
+        showLog("🎉 100 ABT recebidos com sucesso!", "#10B981");
+        
+        await updateDashboard();
+      } catch (err) {
+        console.error("Erro no resgate:", err);
+        showLog("Erro ou transação rejeitada.", "#EF4444");
       }
+    }
+
+    function showLog(msg, color) {
+      const logDiv = document.getElementById("logMessage");
+      logDiv.innerText = msg;
+      logDiv.style.color = color;
     }
   </script>
 </body>
