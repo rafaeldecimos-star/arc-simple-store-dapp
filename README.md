@@ -1,35 +1,28 @@
-# arc-simple-store-dapp
-dApp simples de leitura e escrita na Arc Testnet
-# 🚀 Arc Simple Store dApp
+# 🚰 Arc Faucet & Token Dashboard (ABT)
 
-Um dApp (Aplicação Descentralizada) responsivo e intuitivo desenvolvido para a **Arc Testnet**, permitindo a gravação e leitura de mensagens diretamente na blockchain de forma rápida e transparente.
+Um dApp (Aplicação Descentralizada) responsivo e interativo desenvolvido para a **Arc Testnet**, permitindo o resgate periódico de tokens de teste (Arc Builder Token - ABT) com limitação de tempo (*cooldown* de 24 horas) e consulta de saldo em tempo real.
 
 ---
 
 ## 💡 Sobre o Projeto
 
-Este projeto foi construído para demonstrar a interação full-stack com a rede Arc, cobrindo desde a escrita e implantação do Smart Contract até a integração com o Frontend via Web3 (Ethers.js).
-
-### 🛠️ Tecnologias Utilizadas
-- **Solidity** (^0.8.20) - Smart Contract
-- **Remix IDE** - Compilação e Deploy
-- **HTML5 / CSS3 / JavaScript (ES6)** - Frontend
-- **Ethers.js (v5)** - Conexão Web3 e interação com o contrato
-- **MetaMask** - Gestão de carteira e assinatura de transações
+Este dApp foi desenvolvido para demonstrar a criação e interação full-stack com Smart Contracts ERC-20 na Arc Testnet:
+- **Smart Contract:** Token ERC-20 com sistema de Faucet integrado.
+- **Frontend Web3:** Interface intuitiva com suporte à conexão de carteiras (MetaMask/Rabby), leitura de saldo e contador de cooldown.
 
 ---
 
 ## 🔗 Informações de Deploy (Arc Testnet)
 
-- **Endereço do Contrato:** 0x199D17bc60a90e179E09135067D094daFcb6eb27
-- **Hash da Transação de Deploy:** 0xf82d2a755972ba2de2aac8d9c4338b8bfbc9053cbc31f33aaeb96d1a44c41cb7
+- **Endereço do Contrato:** `0xe21Da15088C0cEc0Ea7b3d011d3Fce511dEDD0C6`
 - **Rede:** Arc Testnet (Chain ID: `5042002`)
+- **Token:** Arc Builder Token (`ABT`)
 
 ---
 
-## 🚀 Como Executar Localmente
+## 🛠️ Tecnologias Utilizadas
 
-1. Clone este repositório ou baixe o arquivo `index.html`.
-2. Abra o arquivo `index.html` diretamente em seu navegador web.
-3. Certifique-se de ter a extensão **MetaMask** instalada e configurada na **Arc Testnet**.
-4. Clique em **Conectar Carteira** e comece a interagir!
+- **Solidity** (^0.8.20)
+- **Remix IDE** (Compilação e Deploy)
+- **HTML5 / CSS3 / JavaScript (ES6)**
+- **Ethers.js (v5)** (Conexão Web3)
