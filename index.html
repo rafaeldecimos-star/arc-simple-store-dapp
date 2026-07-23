@@ -41,13 +41,28 @@
             border: 1px solid var(--arc-border);
         }
 
+        /* Layout em flexbox com espaçamento entre o título e o logo oposto */
         h1 {
             font-size: 22px;
             font-weight: 700;
             margin-top: 0;
             margin-bottom: 8px;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             letter-spacing: -0.5px;
+        }
+
+        .title-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .arc-official-logo {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
         }
 
         .subtitle {
@@ -95,7 +110,7 @@
             font-weight: 700;
         }
 
-        /* Valor do saldo com fonte reduzida para 18px */
+        /* Valor do saldo em 18px */
         .stat-value {
             font-size: 18px;
             font-weight: 800;
@@ -149,7 +164,14 @@
 <body>
 
     <div class="card">
-        <h1>💧 Arc USDC Faucet</h1>
+        <h1>
+            <span class="title-left">💧 Arc USDC Faucet</span>
+            <!-- Símbolo Oficial da Arc no lado direito -->
+            <svg class="arc-official-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="50" cy="50" r="50" fill="#0052FF"/>
+                <path d="M50 20L78 72H63L50 48L37 72H22L50 20Z" fill="white"/>
+            </svg>
+        </h1>
         <div class="subtitle">Resgate USDC de teste na Arc Testnet</div>
 
         <div id="walletStatus" class="status-badge">Carteira: Não Conectada</div>
@@ -188,7 +210,7 @@
         const usdcIconSvg = `<svg class="usdc-icon" viewBox="0 0 2000 2000" xmlns="http://www.w3.org/2000/svg">
             <circle cx="1000" cy="1000" r="1000" fill="#2775CA"/>
             <path d="M1275 1140c0-105-62-142-187-165-92-17-110-33-110-72 0-38 32-62 89-62 52 0 83 18 97 58 5 13 16 22 30 22h52c16 0 30-13 28-29-14-80-73-138-154-150v-82c0-16-13-30-30-30h-60c-16 0-30 13-30 30v80c-98 12-160 76-160 162 0 108 67 143 186 166 84 17 111 36 111 74 0 47-42 68-98 68-71 0-101-28-112-68-4-15-17-25-32-25h-55c-17 0-30 14-27 31 16 88 80 144 163 158v81c0 16 13 30 30 30h60c16 0 30-13 30-30v-81c98-14 162-79 162-170z" fill="#FFF"/>
-            <path d="M1000 200c-441 0-800 359-800 800s359 800 800 800 800-359 800-800-359-800-800-800zm0 1450c-358 0-650-292-650-650s292-650 650-650 650 292 650 650-292 650-650-650z" fill="#FFF"/>
+            <path d="M1000 200c-441 0-800 359-800 800s359 800 800 800 800-359 800-800-359-800-800-800zm0 1450c-358 0-650-292-650-650s292-650 650-650 650 292 650 650-292 650-650 650z" fill="#FFF"/>
         </svg>`;
 
         async function connectWallet() {
