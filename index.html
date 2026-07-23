@@ -41,7 +41,7 @@
             border: 1px solid var(--arc-border);
         }
 
-        /* Layout em flexbox para alinhar a gota d'água à esquerda e o logo Arc à direita */
+        /* Título centralizado com a gota d'água */
         h1 {
             font-size: 22px;
             font-weight: 700;
@@ -49,19 +49,9 @@
             margin-bottom: 8px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            letter-spacing: -0.5px;
-        }
-
-        .title-left {
-            display: flex;
-            align-items: center;
+            justify-content: center;
             gap: 8px;
-        }
-
-        .arc-official-logo {
-            width: 28px;
-            height: 28px;
+            letter-spacing: -0.5px;
         }
 
         .subtitle {
@@ -109,7 +99,7 @@
             font-weight: 700;
         }
 
-        /* Valor do saldo com fonte em 18px */
+        /* Valor do saldo em 18px */
         .stat-value {
             font-size: 18px;
             font-weight: 800;
@@ -163,14 +153,7 @@
 <body>
 
     <div class="card">
-        <h1>
-            <span class="title-left">💧 Arc USDC Faucet</span>
-            <!-- Símbolo Oficial da Arc no lado direito -->
-            <svg class="arc-official-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="50" fill="#0052FF"/>
-                <path d="M50 20L78 72H63L50 48L37 72H22L50 20Z" fill="white"/>
-            </svg>
-        </h1>
+        <h1>💧 Arc USDC Faucet</h1>
         <div class="subtitle">Resgate USDC de teste na Arc Testnet</div>
 
         <div id="walletStatus" class="status-badge">Carteira: Não Conectada</div>
