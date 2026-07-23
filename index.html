@@ -41,7 +41,7 @@
             border: 1px solid var(--arc-border);
         }
 
-        /* Layout em flexbox com espaçamento entre o título e o logo oposto */
+        /* Layout com a gota d'água na esquerda e a imagem oficial do logo Arc na direita */
         h1 {
             font-size: 22px;
             font-weight: 700;
@@ -59,10 +59,12 @@
             gap: 8px;
         }
 
+        /* Ajuste de tamanho e arredondamento para a logo oficial */
         .arc-official-logo {
             width: 28px;
             height: 28px;
             object-fit: contain;
+            border-radius: 50%;
         }
 
         .subtitle {
@@ -166,11 +168,8 @@
     <div class="card">
         <h1>
             <span class="title-left">💧 Arc USDC Faucet</span>
-            <!-- Símbolo Oficial da Arc no lado direito -->
-            <svg class="arc-official-logo" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="50" fill="#0052FF"/>
-                <path d="M50 20L78 72H63L50 48L37 72H22L50 20Z" fill="white"/>
-            </svg>
+            <!-- Logo oficial da Arc carregado via imagem -->
+            <img src="https://blog.nodit.io/content/images/2024/07/arc-logo.png" alt="Arc Logo" class="arc-official-logo" onerror="this.src='https://community.arc.io/favicon.ico'">
         </h1>
         <div class="subtitle">Resgate USDC de teste na Arc Testnet</div>
 
